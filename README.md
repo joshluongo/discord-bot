@@ -1,4 +1,6 @@
-# Discord Bot
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+# Discord Bot 
 A dead simple discord poster. Created for [Game Plus](http://gameplus.com.au).
 
 ## Why?
