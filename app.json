@@ -1,0 +1,6 @@
+{
+  "name": "Discord Bot",
+  "description": "A discord webhook helper.",
+  "repository": "https://github.com/joshluongo/discord-bot",
+  "addons": []
+}

@@ -1,0 +1,21 @@
+{
+    "name": "joshluongo/discord-bot",
+    "description": "A discord webhook helper.",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Joshua Luongo",
+            "email": "josh@jrapps.com.au"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.2",
+        "slim/slim": "^3.6"
+    },
+    "autoload": {
+        "files": [
+            "libs/discordhook.php",
+            "libs/textprocessor.php"
+        ]
+    }
+}
