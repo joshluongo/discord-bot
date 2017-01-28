@@ -66,7 +66,7 @@ $app->post('/post/{channel}/{key}', function ($request, $response, $args) {
     // Send it!
     $worked = DiscordHook::callDiscordHook($request->getAttribute('channel'), $request->getAttribute('key'), $processedInput);
 
-    return $worked ? $response->withStatus(204) : $response->withStatus(400);
+    return $worked ? $response->withStatus(200)->getBody()->write("ok") : $response->withStatus(400);
 });
 
 $app->run();
