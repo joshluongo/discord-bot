@@ -67,14 +67,17 @@ class TextProcessor {
    * Perform filters on input.
    *
    * Built In Filter Types:
+   * [html] - Converts HTML to plain text.
+   * [slack] - Converts Slack webhook to text. (This must be the first filter!)
    * [whitespace] - Makes everything all whitespace single space.
    *
    * @param $filters String. This should be a CSV.
    * @param $input String
+   * @param $contentType String
    *
    * @return string
   **/
-  public function performFilters($filters, $input) {
+  public function performFilters($filters, $input, $contentType="text/plain") {
     $newString = $input;
 
     // Split filters.
@@ -95,12 +98,26 @@ class TextProcessor {
       $name = strtolower(trim($value));
 
       switch ($name) {
-        case 'whitespace':
-          $newString = preg_replace('/\h+/', ' ', $newString);
-          break;
 
         case 'html':
-          $newString = \Html2Text\Html2Text::convert($newString)
+          $newString = \Html2Text\Html2Text::convert($newString);
+          break;
+
+        case 'slack':
+          if ($contentType == "application/json") {
+            // Slack conversion must be JSON.
+            $dataObj = json_decode($newString, true);
+
+            // Check if we have a message.
+            if (!empty($dataObj["text"])) {
+              // Found the Slack message!
+              $newString = $dataObj["text"];
+            }
+          }
+          break;
+
+        case 'whitespace':
+          $newString = preg_replace('/\h+/', ' ', $newString);
           break;
 
         default:

@@ -56,8 +56,11 @@ $app->post('/post/{channel}/{key}', function ($request, $response, $args) {
 
     // Use filters if needed.
     if (!is_null($filters)) {
+      // Get content type.
+      $contentType = $request->getHeader('Content-Type');
+
       // Use the magic of filters.
-      $processedInput = $textProcessor->performFilters($filters, $processedInput);
+      $processedInput = $textProcessor->performFilters($filters, $processedInput, (count($contentType)>0?$contentType[0]:null));
     }
 
     // Send it!

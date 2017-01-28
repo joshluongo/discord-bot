@@ -1,6 +1,6 @@
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-# Discord Bot 
+# Discord Bot
 A dead simple discord poster. Created for [Game Plus](http://gameplus.com.au).
 
 ## Why?
@@ -32,6 +32,8 @@ __Default Filters:__
 
 | Filter | Description |
 |---|---|
+| html | Converts HTML to plain text. |
+| slack | Converts Slack webhook to text. __(This must be the first filter!)__. |
 | whitespace | Removes extra horizontal whitespace. |
 
 ### Custom Filters
