@@ -99,6 +99,10 @@ class TextProcessor {
           $newString = preg_replace('/\h+/', ' ', $newString);
           break;
 
+        case 'html':
+          $newString = \Html2Text\Html2Text::convert($newString)
+          break;
+
         default:
           if (isset($customFilters[$name])) {
             // Found it!

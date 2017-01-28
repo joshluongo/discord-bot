@@ -10,7 +10,8 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "^6.2",
-        "slim/slim": "^3.6"
+        "slim/slim": "^3.6",
+        "soundasleep/html2text": "~0.3"
     },
     "autoload": {
         "files": [
