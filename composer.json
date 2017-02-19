@@ -16,6 +16,7 @@
     "autoload": {
         "files": [
             "libs/discordhook.php",
+            "libs/routecontroller.php",
             "libs/textprocessor.php"
         ]
     }

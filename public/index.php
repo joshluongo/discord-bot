@@ -38,36 +38,10 @@ $c['notAllowedHandler'] = function ($c) {
 $app = new \Slim\App($c);
 
 // Discord Webhook Helper.
-$app->post('/post/{channel}/{key}', function ($request, $response, $args) {
-    // Text Processor
-    $textProcessor = new TextProcessor();
+$app->post('/post/{channel}/{key}', \RouteController::class . ':messageParser');
 
-    // Tag someone?
-    $target = $textProcessor->boolval_real($request->getQueryParam("target", null));
-
-    // Get the raw input.
-    $parsedBody = urldecode($request->getBody());
-
-    // Process the input
-    $processedInput = $textProcessor->sanitizeInput($parsedBody, $target);
-
-    // Get filters.
-    $filters = $request->getQueryParam("filter", null);
-
-    // Use filters if needed.
-    if (!is_null($filters)) {
-      // Get content type.
-      $contentType = $request->getHeader('Content-Type');
-
-      // Use the magic of filters.
-      $processedInput = $textProcessor->performFilters($filters, $processedInput, (count($contentType)>0?$contentType[0]:null));
-    }
-
-    // Send it!
-    $worked = DiscordHook::callDiscordHook($request->getAttribute('channel'), $request->getAttribute('key'), $processedInput);
-
-    return $worked ? $response->withStatus(200)->getBody()->write("ok") : $response->withStatus(400);
-});
+// Slack to Discord Webhook Helper.
+$app->post('/slack/{channel}/{key}', \RouteController::class . ':slackParser');
 
 $app->run();
 

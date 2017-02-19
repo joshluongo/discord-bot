@@ -64,20 +64,78 @@ class TextProcessor {
   }
 
   /**
+   * Convert Slack object to string.
+   *
+   * @param $input array
+   *
+   * @return string
+  **/
+  public function processSlackObject($input) {
+    // Output container.
+    $output = [];
+
+    // Contains text?
+    if (isset($input["text"])) {
+      $output[] = $input["text"];
+    }
+    
+    // Check for attachments
+    if (isset($input["attachments"]) && is_array($input["attachments"])) {
+      // Loop over attachments
+      foreach ($input["attachments"] as $attachment) {
+        if (!empty($attachment["title"]) && !empty($attachment["title_link"])) {
+          // Title + Link
+          $output[] = $attachment["title"] . " " . $attachment["title_link"];
+        } else if (!empty($attachment["title"])) {
+          // Just a message
+          $output[] = $attachment["title"];
+        } else if (!empty($attachment["fallback"])) {
+          // Just a fallback
+          $output[] = $attachment["fallback"];
+        }
+      }
+    }
+
+    // Decode links.
+    foreach ($output as $messageKey => $message) {
+      // Regex
+      preg_match_all("/<(.*?)\|(.*?)>/", $message, $links_array);
+
+      // Check if we found links.
+      if (count($links_array[0]) == 0) {
+        continue;
+      }
+
+      // Merge
+      foreach($links_array[0] as $key => $value) {
+        // Build new string.
+        $newlink = "(" . $links_array[2][$key] . " - " . $links_array[1][$key] . ")";
+
+        // Find and replace on string.
+        $message = str_ireplace($value, $newlink, $message);
+      }
+
+      // Replace
+      $output[$messageKey] = $message;
+    }
+
+    return \Html2Text\Html2Text::convert(implode("\n", $output));
+  }
+
+  /**
    * Perform filters on input.
    *
    * Built In Filter Types:
    * [html] - Converts HTML to plain text.
-   * [slack] - Converts Slack webhook to text. (This must be the first filter!)
    * [whitespace] - Makes everything all whitespace single space.
    *
    * @param $filters String. This should be a CSV.
    * @param $input String
-   * @param $contentType String
+   * @param $skipFilters Array
    *
    * @return string
   **/
-  public function performFilters($filters, $input, $contentType="text/plain") {
+  public function performFilters($filters, $input, $skipFilters=[]) {
     $newString = $input;
 
     // Split filters.
@@ -100,24 +158,15 @@ class TextProcessor {
       switch ($name) {
 
         case 'html':
-          $newString = \Html2Text\Html2Text::convert($newString);
-          break;
-
-        case 'slack':
-          if ($contentType == "application/json") {
-            // Slack conversion must be JSON.
-            $dataObj = json_decode($newString, true);
-
-            // Check if we have a message.
-            if (!empty($dataObj["text"])) {
-              // Found the Slack message!
-              $newString = $dataObj["text"];
-            }
+          if (!in_array('html', $skipFilters)) {
+            $newString = \Html2Text\Html2Text::convert($newString);
           }
           break;
 
         case 'whitespace':
-          $newString = preg_replace('/\h+/', ' ', $newString);
+          if (!in_array('whitespace', $skipFilters)) {
+            $newString = preg_replace('/\h+/', ' ', $newString);
+          }
           break;
 
         default:

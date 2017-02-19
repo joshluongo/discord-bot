@@ -8,16 +8,23 @@ Discord has webhooks (Thats how this works). But you have to pass it JSON so it 
 
 This also allows you to do pre-processing to the input before its posted.
 
+We can also convert Slack webhooks to Discord.
+
 ## How does it work?
 POST data to the endpoint and it will post it to the relevant discord room.
 
 ### URL Scheme
 
-The API must be called with this format.
+The API must be called with this format:
 `https://xxxxxx/post/{channel}/{key}`
 
 Discord Webhook URL:
 `https://discordapp.com/api/webhooks/{channel}/{key}`
+
+#### Slack Conversion
+
+To use the Slack webhook to Discord conversion use this URL scheme:
+`https://xxxxxx/slack/{channel}/{key}`
 
 ### URL Parameters
 
@@ -33,7 +40,6 @@ __Default Filters:__
 | Filter | Description |
 |---|---|
 | html | Converts HTML to plain text. |
-| slack | Converts Slack webhook to text. __(This must be the first filter!)__. |
 | whitespace | Removes extra horizontal whitespace. |
 
 ### Custom Filters
