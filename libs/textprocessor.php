@@ -231,8 +231,6 @@ class TextProcessor {
       $customFilters[strtolower(trim($key))] = [$find, $repl];
     }
 
-    print_r($customFilters);
-
     return $customFilters;
   }
 
